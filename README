@@ -1,0 +1,59 @@
+# Deploying Sherlock API proxy to AWS API gateway
+
+---
+
+## **Prerequisites**
+ **AWS Credentials Configured:**
+   - Ensure your AWS credentials are properly configured with sufficient permissions to create and manage EKS resources.
+
+   aws configure
+   AWS Access Key ID
+    AWS Secret Access Key
+    Default region name : us-east-1 
+    Default output format : ~/.aws/config
+---
+1. **Set up the Terraform EKS module configuration:**
+    ```
+    Initialize and apply the Terraform configuration:
+
+    ```bash
+    terraform init
+    terraform plan
+    terraform apply
+    ```
+
+2. **output:**
+
+    api_url = "https://mcy3ozxjqj.execute-api.us-east-1.amazonaws.com/"
+    aws_cognito_user_pool_details = {
+    "arn" = "arn:aws:cognito-idp:us-east-1:767398048104:userpool/us-east-1_dLeLFeKHP"
+    "endpoint" = "cognito-idp.us-east-1.amazonaws.com/us-east-1_dLeLFeKHP"
+    "id" = "us-east-1_dLeLFeKHP"
+    "name" = "sherlock-userpool"
+    }
+    cognito_client_id = "6n1361ngbq56lq6q4r05r4bn8d"
+    cognito_client_secret = <sensitive>
+    cognito_oauth_domain = "sherlockapi"
+    cognito_oauth_token_url = "https://sherlockapi.auth.us-east-1.amazoncognito.com/oauth2/token"
+
+2. **testing:**
+
+    Oauth Token:
+                curl --location 'https://sherlockapi.auth.us-east-1.amazoncognito.com/oauth2/token' \
+        --header 'Content-Type: application/x-www-form-urlencoded' \
+        --header 'Cookie: XSRF-TOKEN=188f60a1-ee97-4c56-adeb-e52de4e43a57' \
+        --data-urlencode 'grant_type=client_credentials' \
+        --data-urlencode 'client_id=50r963abssrr9e6baadg35o09r' \
+        --data-urlencode 'client_secret=k9rpp1fpvgh7h1lenam59ubb02uca11l2d1jf5hvh85p6u4g80t' \
+        --data-urlencode 'scope=test/write'
+
+    Api Call:
+                    curl --location 'https://don1r4hhlg.execute-api.us-east-1.amazonaws.com/dev/account-status-change/v0/retrieve-bundle' \
+        --header 'Authorization: Bearer eyJraWQiOiJjbTVNM3Y0bCtLZ1NTdDNBVE1cL2s5RVhJQ2ZcLzBBMWJxZVRuRm1DVWdxbFE9IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiI1MHI5NjNhYnNzcnI5ZTZiYWFkZzM1bzA5ciIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoidGVzdFwvd3JpdGUiLCJhdXRoX3RpbWUiOjE3MzQxMTU4NzYsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy1lYXN0LTEuYW1hem9uYXdzLmNvbVwvdXMtZWFzdC0xX1Q1RDZ3SkZLQSIsImV4cCI6MTczNDExOTQ3NiwiaWF0IjoxNzM0MTE1ODc2LCJ2ZXJzaW9uIjoyLCJqdGkiOiI2YTM2MTdlMS1jOWFkLTRiNjctODJhMS1jMTVjNWNhN2E1MTYiLCJjbGllbnRfaWQiOiI1MHI5NjNhYnNzcnI5ZTZiYWFkZzM1bzA5ciJ9.Ji5aPzZyrBohFs2c6PT7fxV2oQJBIrJKYuGceHRcUulhf1Sp7o-9kT5MnNQFZ2CNwE6z3WeA7niOQPPSw_raLZVuhuiwhmzcJ58KEO9lMSOkooXTrsjqgOqeWHyjX50jkFxP2-kZcYkHT9QLZQFiaom3y2_FFatt71jREjM7j74Am27YLMkyG7TcRKnuQBxpeZtbENOlBEsJyWqlxe_X_gpYO2tqrSuc7WRa4D2lUaRdMiLJe_9_QrH0Z0SnGO8zP7DCIvlvST3utR21R1fZi0n7Whg3GrktxrRH5yo1CWM8cQXb0wxw--rYU53Qkati1ILfvtxBi-MclmC_728C4g' \
+        --header 'Content-Type: application/json' \
+        --data '{
+        "msisdn": "+18184823381",
+        "identifier": "string",
+        "carrierName": "string",
+        "customerName": "string"
+        }'
