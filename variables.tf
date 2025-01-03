@@ -35,6 +35,15 @@ variable "sherlock_api_client" {
   description = "Sherlock API Test Client"
   type        = string
 }
+variable "environment" {
+  description = "Environment tag for resources"
+  default     = "dev"
+}
 
+variable "base_url" {
+  description = "Base URL for the Sherlock API Endpoint"
+}
 
-
+variable "oauth_domain" {
+  description = "Base URL for the Sherlock API Endpoint"
+}
